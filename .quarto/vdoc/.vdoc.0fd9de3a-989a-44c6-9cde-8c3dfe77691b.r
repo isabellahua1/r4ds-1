@@ -1,21 +1,21 @@
----
-title: "Analyzing Music Data"
-author: Isabella Hua
-format: html
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
-```
-
-## Artist metrics
-
-`artist.familiarity` measures the overall familiarity or popularity of an artist based on their catalog and listening history. `artist.hotttnesss` measures the current "hotness" or trendiness of an artist, reflecting recent activity and popularity trends. Both metrics are derived from the Echo Nest API.
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 music <- read_csv("data/music.csv")
 music %>%
@@ -32,9 +32,9 @@ music %>%
   pivot_longer(everything(), names_to = "metric", values_to = "value") %>%
   separate(metric, into = c("variable", "statistic"), sep = "_(?=[^_]*$)") %>%
   pivot_wider(names_from = statistic, values_from = value)
-```
-
-```{r}
+#
+#
+#
 # Plot distribution of song.year, excluding year = 0
 year_data <- music %>%
   filter(song.year != 0)
@@ -50,12 +50,9 @@ ggplot(year_data, aes(x = song.year)) +
     y = "Count"
   ) +
   theme_minimal()
-```
-
-Short interpretation: The distribution shows how song releases are concentrated in particular decades; note that zeros were removed, which represent missing or unknown years.
-
-
-```{r}
+#
+#
+#
 # Display human-readable columns
 music %>%
   select(
@@ -70,9 +67,9 @@ music %>%
     song.year
   ) %>%
   head(20)
-```
-
-```{r}
+#
+#
+#
 # Count rows with placeholder values
 music %>%
   summarise(
@@ -94,44 +91,45 @@ music %>%
     usable_coordinates = sum(usable_coords, na.rm = TRUE),
     placeholder_coordinates = sum(placeholder_coords, na.rm = TRUE)
   )
-```
-
-## Artist Locations
-
-Note that approximately half of the artists have placeholder coordinates (0, 0), which limits geographic analysis of the dataset.
-
-```{r}
-#| fig-width: 10
-#| fig-height: 6
+#
+#
+#
+#
+#
+#
+#
 #| message: false
-#| warning: false
-# World map of artist locations (ggplot, colored by song.year; exclude song.year == 0)
-library(ggplot2)
+# World map of artist locations (excluding placeholder 0,0 coordinates)
 library(maps)
-
+# color artist points by song.year (exclude year == 0)
 artist_coords <- music %>%
   distinct(artist.name, artist.latitude, artist.longitude, song.year) %>%
   filter(!is.na(song.year), song.year != 0) %>%
   filter(!is.na(artist.latitude), !is.na(artist.longitude)) %>%
   filter(!(artist.latitude == 0 & artist.longitude == 0))
 
-world <- ggplot2::map_data("world")
+n_artists <- nrow(artist_coords)
 
-g <- ggplot() +
-  geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "gray95", color = "gray80") +
-  geom_point(data = artist_coords, aes(x = artist.longitude, y = artist.latitude, color = song.year),
-             size = 1.5, alpha = 0.85) +
-  scale_color_viridis_c(option = "plasma", name = "Song year") +
-  coord_quickmap() +
-  labs(
-    title = "Artist Locations (colored by song.year)",
-    subtitle = "Points show artists with known release years (song.year ≠ 0); color indicates release year.",
-    caption = "Note: many artists have placeholder coordinates (0,0) and were excluded."
-  ) +
-  theme_minimal() +
-  theme(legend.position = "right")
+# map background (base graphics)
+map("world", fill = TRUE, col = "gray95", bg = "white")
 
-print(g)
-```
+# color palette for years
+years <- artist_coords$song.year
+pal <- colorRampPalette(c("#4575b4", "#91bfdb", "#ffffbf", "#fee090", "#fc8d59", "#d73027"))
+cols <- pal(length(unique(years)))[as.integer(factor(years))]
 
-Short interpretation: Geographic coverage is uneven; clusters appear in North America and Europe where more release-year data are available. Missing/placeholder coordinates limit global coverage.
+points(artist_coords$artist.longitude, artist_coords$artist.latitude,
+       pch = 21, bg = cols, col = "#333333", cex = 0.8)
+
+# legend: show min and max year
+yr_min <- min(years, na.rm = TRUE)
+yr_max <- max(years, na.rm = TRUE)
+legend_text <- paste0("song.year: ", yr_min, " — ", yr_max)
+legend("topright", legend = legend_text, bty = "n")
+
+title(main = "Artist Locations (colored by song.year)",
+      sub = paste("Plotted artists:", n_artists, "— colors show song release year; rows with song.year = 0 are excluded; coverage limited by available coordinates."))
+#
+#
+#
+#

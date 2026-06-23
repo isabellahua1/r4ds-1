@@ -73,165 +73,91 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="artist-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="artist-metrics">Artist metrics</h2>
+<p><code>artist.familiarity</code> measures the overall familiarity or popularity of an artist based on their catalog and listening history. <code>artist.hotttnesss</code> measures the current “hotness” or trendiness of an artist, reflecting recent activity and popularity trends. Both metrics are derived from the Echo Nest API.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 317 × 7
-   artist         track                   date.entered   wk1   wk2   wk3   wk4
-   &lt;chr&gt;          &lt;chr&gt;                   &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 2 Pac          Baby Don't Cry (Keep... 2000-02-26      87    82    72    77
- 2 2Ge+her        The Hardest Part Of ... 2000-09-02      91    87    92    NA
- 3 3 Doors Down   Kryptonite              2000-04-08      81    70    68    67
- 4 3 Doors Down   Loser                   2000-10-21      76    76    72    69
- 5 504 Boyz       Wobble Wobble           2000-04-15      57    34    25    17
- 6 98^0           Give Me Just One Nig... 2000-08-19      51    39    34    26
- 7 A*Teens        Dancing Queen           2000-07-08      97    97    96    95
- 8 Aaliyah        I Don't Wanna           2000-01-29      84    62    51    41
- 9 Aaliyah        Try Again               2000-03-18      59    53    38    28
-10 Adams, Yolanda Open My Heart           2000-08-26      76    76    74    69
-# ℹ 307 more rows</code></pre>
+<pre><code># A tibble: 4 × 6
+  variable             min     q1  median       q3     max
+  &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+1 artist.familiarity     0  0.468   0.564    0.668    1   
+2 artist.hotttnesss      0  0.325   0.381    0.454    1.08
+3 song.year              0  0       0     2000     2010   
+4 song.tempo             0 97.0   120.     144.     263.  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Short interpretation: The distribution shows how song releases are concentrated in particular decades; note that zeros were removed, which represent missing or unknown years.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 9
+   artist.name     artist.location artist.latitude artist.longitude artist.terms
+   &lt;chr&gt;                     &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       
+ 1 Casual                        0             0                0   hip hop     
+ 2 The Box Tops                  0            35.1            -90.0 blue-eyed s…
+ 3 Sonora Santane…               0             0                0   salsa       
+ 4 Adam Ant                      0             0                0   pop rock    
+ 5 Gob                           0             0                0   pop punk    
+ 6 Jeff And Sheri…               0             0                0   southern go…
+ 7 Rated R                       0             0                0   breakbeat   
+ 8 Tweeterfriendl…               0             0                0   post-hardco…
+ 9 Planet P Proje…               0             0                0   new wave    
+10 Clp                           0             0                0   breakcore   
+11 JennyAnyKind                  0            35.2            -80.0 alternative…
+12 Wayne Watson                  0             0                0   ccm         
+13 Andy Andy                     0             0                0   bachata     
+14 Bob Azzam                     0             0                0   chanson     
+15 Lionel Richie                 0             0                0   quiet storm 
+16 Blue Rodeo                    0            43.6            -79.4 country rock
+17 Richard Souther               0            37.2            -95.8 chill-out   
+18 Faiz Ali Faiz                 0             0                0   qawwali     
+19 Tesla                         0             0                0   hard rock   
+20 lextrical                     0             0                0   indietronica
+# ℹ 4 more variables: artist.familiarity &lt;dbl&gt;, artist.hotttnesss &lt;dbl&gt;,
+#   song.title &lt;dbl&gt;, song.year &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 3
-  earliest   latest     n_records
-  &lt;date&gt;     &lt;date&gt;         &lt;int&gt;
-1 1999-06-05 2000-12-30       317</code></pre>
+<pre><code># A tibble: 1 × 6
+  location_empty release_empty title_empty year_zero familiarity_zero
+           &lt;int&gt;         &lt;int&gt;       &lt;int&gt;     &lt;int&gt;            &lt;int&gt;
+1              0             0           0      5320               24
+# ℹ 1 more variable: hotttnesss_zero &lt;int&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
-  statistic    value
-  &lt;chr&gt;        &lt;int&gt;
-1 n_wk1_values   317</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+  usable_coordinates placeholder_coordinates
+               &lt;int&gt;                   &lt;int&gt;
+1               3742                    6258</code></pre>
 </div>
 </div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 2
-  statistic    value
-  &lt;chr&gt;        &lt;int&gt;
-1 n_wk6_values   280</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
-  status             n
-  &lt;chr&gt;          &lt;int&gt;
-1 improved         251
-2 missing_by_wk6    37
-3 same               2
-4 worse             27</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  median_rank_change
-               &lt;dbl&gt;
-1                -27</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-  week  present missing
-  &lt;chr&gt;   &lt;int&gt;   &lt;int&gt;
-1 wk1       317       0
-2 wk10      244      73
-3 wk20      146     171
-4 wk4       300      17
-5 wk40        7     310
-6 wk76        0     317</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  reentered     n
-  &lt;lgl&gt;     &lt;int&gt;
-1 FALSE       302
-2 TRUE         15</code></pre>
-</div>
-</div>
+</section>
+<section id="artist-locations" class="level2">
+<h2 class="anchored" data-anchor-id="artist-locations">Artist Locations</h2>
+<p>Note that approximately half of the artists have placeholder coordinates (0, 0), which limits geographic analysis of the dataset.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 317 × 9
-   artist         track    first_rank best_rank first_week_best_rank total_weeks
-   &lt;chr&gt;          &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;int&gt;
- 1 2 Pac          Baby Do…         87        72                    3           7
- 2 2Ge+her        The Har…         91        87                    2           3
- 3 3 Doors Down   Krypton…         81         3                   32          53
- 4 3 Doors Down   Loser            76        55                    7          20
- 5 504 Boyz       Wobble …         57        17                    4          18
- 6 98^0           Give Me…         51         2                    7          20
- 7 A*Teens        Dancing…         97        95                    4           5
- 8 Aaliyah        I Don't…         84        35                    6          20
- 9 Aaliyah        Try Aga…         59         1                   14          32
-10 Adams, Yolanda Open My…         76        57                    9          20
-# ℹ 307 more rows
-# ℹ 3 more variables: reached_top10 &lt;lgl&gt;, reached_no1 &lt;lgl&gt;,
-#   week_first_no1 &lt;dbl&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 10
-  artist   track  first_rank best_rank first_week_best_rank total_weeks
-  &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;int&gt;
-1 Madonna  Music          41         1                    6          24
-2 Lonestar Amazed         81         1                   40          55
-3 Creed    Higher         81         7                   46          57
-# ℹ 4 more variables: reached_top10 &lt;lgl&gt;, reached_no1 &lt;lgl&gt;,
-#   week_first_no1 &lt;dbl&gt;, note &lt;chr&gt;</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2405 rows containing missing values or values outside the scale range
-(`geom_line()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 75 rows containing missing values or values outside the scale range
-(`geom_line()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 92 rows containing missing values or values outside the scale range
-(`geom_point()`).</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>Short interpretation: Geographic coverage is uneven; clusters appear in North America and Europe where more release-year data are available. Missing/placeholder coordinates limit global coverage.</p>
+</section>
 
 </main>
 <!-- /main column -->
